@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Check-in{% endblock %}
+{% block nav %}{% endblock %}
+{% block content %}
+<div class="kiosk">
+  <p class="kiosk-gym">{{ user.gym.name }}</p>
+  <div id="kiosk-result" class="kiosk-result" aria-live="assertive">
+    {% include "checkins/_kiosk_idle.html" %}
+  </div>
+  <form id="kiosk-form" class="kiosk-form" hx-post="{% url 'checkins:scan' %}" hx-target="#kiosk-result" autocomplete="off">
+    {% csrf_token %}
+    <label for="kiosk-code" class="kiosk-label">Scan your card or type your code</label>
+    <input type="text" id="kiosk-code" name="code" autofocus inputmode="text" autocapitalize="characters" spellcheck="false">
+  </form>
+  <a href="{% url 'checkins:today' %}" class="kiosk-exit">Staff: exit kiosk</a>
+</div>
+<template id="kiosk-idle">{% include "checkins/_kiosk_idle.html" %}</template>
+<script>
+  // Keep the code box focused so a USB scanner can always type into it,
+  // and go back to the idle screen a few seconds after each scan.
+  (function () {
+    const input = document.getElementById("kiosk-code");
+    const result = document.getElementById("kiosk-result");
+    const idle = document.getElementById("kiosk-idle");
+    let timer;
+    document.body.addEventListener("htmx:afterSwap", function (e) {
+      if (e.target !== result) return;
+      input.value = "";
+      clearTimeout(timer);
+      timer = setTimeout(function () { result.innerHTML = idle.innerHTML; }, 5000);
+    });
+    document.addEventListener("click", function (e) { if (!e.target.closest("a")) input.focus(); });
+    setInterval(function () { if (document.activeElement !== input) input.focus(); }, 2000);
+  })();
+</script>
+{% endblock %}

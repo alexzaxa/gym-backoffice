@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load visits %}
+{% block title %}Check-ins{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Check-ins</h1>
+  <a href="{% url 'checkins:kiosk' %}" class="btn">Open kiosk</a>
+</div>
+<div class="stats">
+  <div class="stat"><b>{{ inside|length }}</b><small>In the gym now</small></div>
+  <div class="stat"><b>{{ today_count }}</b><small>Checked in today</small></div>
+  <div class="stat"><b>{{ denied_count }}</b><small>Refused today</small></div>
+</div>
+
+<h2 class="section-title">In the gym now</h2>
+{% if inside %}
+<div class="member-list">
+  <div class="member-head" aria-hidden="true"><span>Name</span><span>Status</span><span>Arrived</span><span></span></div>
+  {% for visit in inside %}{% with member=visit.member %}
+  <div class="member">
+    {% include "members/_avatar.html" %}
+    <a class="m-name" href="{% url 'members:detail' member.pk %}">{{ member.full_name }}</a>
+    {% include "members/_status_badge.html" %}
+    <span class="m-meta"><span>Since {{ visit.checked_in_at|time:"g:i A" }} ({{ visit.checked_in_at|timesince }})</span><span class="m-sep"> · </span>
+      <span><form method="post" action="{% url 'checkins:toggle' member.pk %}" class="inline-form">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="link-btn">Check out</button></form></span></span>
+  </div>
+  {% endwith %}{% endfor %}
+</div>
+{% else %}
+<p class="empty card">Nobody is checked in right now.</p>
+{% endif %}
+
+<h2 class="section-title">Today</h2>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Name</th><th>In</th><th>Out</th><th>Time</th><th>Result</th></tr></thead>
+    <tbody>
+      {% for visit in today %}
+      <tr>
+        <td><a href="{% url 'members:detail' visit.member.pk %}">{{ visit.member.full_name }}</a></td>
+        <td>{{ visit.checked_in_at|time:"g:i A" }}</td>
+        <td>{% if visit.checked_out_at %}{{ visit.checked_out_at|time:"g:i A" }}{% if visit.checkout_estimated %} <span class="muted">(auto)</span>{% endif %}{% elif visit.result == "allowed" %}<span class="muted">Still here</span>{% else %}—{% endif %}</td>
+        <td>{{ visit.duration|hours_minutes }}</td>
+        <td>{% if visit.result == "denied" %}<span class="badge cancelled">Refused</span> <span class="muted">{{ visit.denied_reason }}</span>{% else %}{{ visit.get_method_display }}{% endif %}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="empty">No check-ins yet today.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

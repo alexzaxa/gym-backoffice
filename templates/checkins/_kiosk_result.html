@@ -1,0 +1,20 @@
+{% load visits %}
+<div class="kiosk-card {{ outcome.kind }}">
+  {% if outcome.member %}{% include "members/_avatar.html" with member=outcome.member large=True %}{% endif %}
+  {% if outcome.kind == "in" %}
+    <p class="kiosk-big">Welcome, {{ outcome.member.first_name }}</p>
+    <p class="kiosk-msg">Checked in at {{ outcome.visit.checked_in_at|time:"g:i A" }}</p>
+  {% elif outcome.kind == "out" %}
+    <p class="kiosk-big">See you, {{ outcome.member.first_name }}</p>
+    <p class="kiosk-msg">You trained for {{ outcome.visit.duration|hours_minutes }}</p>
+  {% elif outcome.kind == "repeat" %}
+    <p class="kiosk-big">You're in, {{ outcome.member.first_name }}</p>
+    <p class="kiosk-msg">Already checked in. Scan again when you leave.</p>
+  {% elif outcome.kind == "denied" %}
+    <p class="kiosk-big">Sorry, {{ outcome.member.first_name }}</p>
+    <p class="kiosk-msg">{{ outcome.message }}. Please see the front desk.</p>
+  {% else %}
+    <p class="kiosk-big">Not recognised</p>
+    <p class="kiosk-msg">{{ outcome.message }}</p>
+  {% endif %}
+</div>

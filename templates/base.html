@@ -7,15 +7,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Barlow:wght@400;600;700&family=Manrope:wght@400;600;700&family=Nunito:wght@400;600;800&family=IBM+Plex+Mono:wght@500&display=swap">
   <link rel="stylesheet" href="{% static 'css/app.css' %}">
-  <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+  <script src="{% static 'js/htmx.min.js' %}"></script>
 </head>
 <body class="theme-{{ theme }}">
 <div class="shell">
-  {% if user.is_authenticated %}
+  {% block nav %}{% if user.is_authenticated %}
   {% with path=request.path %}
   <nav class="nav">
-    <a href="{% url 'members:list' %}" class="brand">{{ user.gym.name|default:"Gym Back Office" }}</a>
+    <a href="{% url 'checkins:today' %}" class="brand">{{ user.gym.name|default:"Gym Back Office" }}</a>
+    <a href="{% url 'checkins:today' %}" {% if path == "/checkins/" %}aria-current="page"{% endif %}>Check-ins</a>
     <a href="{% url 'members:list' %}" {% if path|slice:":9" == "/members/" %}aria-current="page"{% endif %}>Members</a>
+    <a href="{% url 'checkins:kiosk' %}">Kiosk</a>
     {% if user.is_owner %}
     <a href="{% url 'staff_list' %}" {% if path|slice:":7" == "/staff/" %}aria-current="page"{% endif %}>Staff</a>
     <a href="{% url 'settings' %}" {% if path == "/settings/" %}aria-current="page"{% endif %}>Settings</a>
@@ -26,7 +28,7 @@
     </form>
   </nav>
   {% endwith %}
-  {% endif %}
+  {% endif %}{% endblock %}
   <main class="content">
     {% for message in messages %}<div class="flash">{{ message }}</div>{% endfor %}
     {% block content %}{% endblock %}

@@ -14,14 +14,14 @@ class GymSignupView(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect("members:list")
+            return redirect("checkins:today")
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
         messages.success(self.request, f"Welcome! {user.gym.name} is set up.")
-        return redirect("members:list")
+        return redirect("checkins:today")
 
 
 class StaffListView(OwnerRequiredMixin, ListView):
