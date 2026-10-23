@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Members{% endblock %}
+{% block content %}
+<div class="mb-4 flex items-center justify-between">
+  <h1 class="text-2xl font-semibold">Members</h1>
+  <a href="{% url 'members:create' %}" class="btn">Add member</a>
+</div>
+<form class="mb-4 flex flex-col gap-2 sm:flex-row"
+      hx-get="{% url 'members:list' %}" hx-target="#member-table" hx-trigger="input changed delay:250ms from:input, change from:select" hx-push-url="true">
+  <input type="search" name="q" value="{{ q }}" placeholder="Search by name, email, phone or code" autofocus>
+  <select name="status" class="sm:w-48">
+    <option value="">All statuses</option>
+    {% for value, label in statuses %}<option value="{{ value }}" {% if value == status %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+</form>
+<div id="member-table">{% include "members/_member_table.html" %}</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ member.full_name }}{% endblock %}
+{% block content %}
+<a href="{% url 'members:list' %}" class="text-sm text-indigo-600">&larr; All members</a>
+<div class="mt-2 flex flex-col gap-6 rounded-lg bg-white p-6 shadow sm:flex-row">
+  {% if member.photo %}
+    <img src="{{ member.photo.url }}" alt="" class="h-40 w-40 rounded-lg object-cover">
+  {% else %}
+    <div class="flex h-40 w-40 items-center justify-center rounded-lg bg-slate-200 text-4xl font-semibold text-slate-500">{{ member.first_name|first }}{{ member.last_name|first }}</div>
+  {% endif %}
+  <div class="flex-1">
+    <div class="flex items-start justify-between gap-4">
+      <h1 class="text-2xl font-semibold">{{ member.full_name }}</h1>
+      <a href="{% url 'members:edit' member.pk %}" class="btn-secondary">Edit</a>
+    </div>
+    <div class="mt-1">{% include "members/_status_badge.html" %}</div>
+    <dl class="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
+      <div><dt class="text-sm text-slate-500">Email</dt><dd>{{ member.email|default:"—" }}</dd></div>
+      <div><dt class="text-sm text-slate-500">Phone</dt><dd>{{ member.phone|default:"—" }}</dd></div>
+      <div><dt class="text-sm text-slate-500">Check-in code</dt><dd class="font-mono">{{ member.checkin_code }}</dd></div>
+      <div><dt class="text-sm text-slate-500">Member since</dt><dd>{{ member.created_at|date:"M j, Y" }}</dd></div>
+    </dl>
+    {% if member.notes %}<p class="mt-4 whitespace-pre-line text-slate-600">{{ member.notes }}</p>{% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Add staff login{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-md rounded-lg bg-white p-6 shadow">
+  <h1 class="mb-4 text-xl font-semibold">Add staff login</h1>
+  <form method="post">
+    {% csrf_token %}
+    {% include "_form_fields.html" %}
+    <div class="flex gap-2"><button class="btn">Create login</button><a href="{% url 'staff_list' %}" class="btn-secondary">Cancel</a></div>
+  </form>
+</div>
+{% endblock %}
