@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Add staff login{% endblock %}
+{% block content %}
+<div class="card form-card">
+  <h1>Add staff login</h1>
+  <form method="post">
+    {% csrf_token %}
+    {% include "_form_fields.html" %}
+    <div class="actions"><button class="btn">Create login</button><a href="{% url 'staff_list' %}" class="btn-secondary">Cancel</a></div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+<div class="member-list">
+  <div class="member-head" aria-hidden="true"><span>Name</span><span>Status</span><span>Phone</span><span>Code</span></div>
+  {% for member in members %}
+  <a class="member" href="{% url 'members:detail' member.pk %}">
+    {% include "members/_avatar.html" %}
+    <span class="m-name">{{ member.full_name }}</span>
+    {% include "members/_status_badge.html" %}
+    <span class="m-meta"><span>{{ member.phone|default:"—" }}</span><span class="m-sep"> · </span><span class="code">{{ member.checkin_code }}</span></span>
+  </a>
+  {% empty %}
+  <p class="empty">No members found.</p>
+  {% endfor %}
+</div>
+{% if page_obj.has_other_pages %}
+<div class="pager">
+  {% if page_obj.has_previous %}<a class="btn-secondary" href="?page={{ page_obj.previous_page_number }}&q={{ q|urlencode }}&status={{ status }}">Previous</a>{% endif %}
+  <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a class="btn-secondary" href="?page={{ page_obj.next_page_number }}&q={{ q|urlencode }}&status={{ status }}">Next</a>{% endif %}
+</div>
+{% endif %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ member.full_name }}{% endblock %}
+{% block content %}
+<a href="{% url 'members:list' %}" class="back">&larr; All members</a>
+<div class="card profile">
+  {% include "members/_avatar.html" with large=True %}
+  <div class="info">
+    <div class="page-head">
+      <h1>{{ member.full_name }}</h1>
+      <a href="{% url 'members:edit' member.pk %}" class="btn-secondary">Edit</a>
+    </div>
+    {% include "members/_status_badge.html" %}
+    <dl>
+      <div><dt>Email</dt><dd>{{ member.email|default:"—" }}</dd></div>
+      <div><dt>Phone</dt><dd>{{ member.phone|default:"—" }}</dd></div>
+      <div><dt>Check-in code</dt><dd class="code">{{ member.checkin_code }}</dd></div>
+      <div><dt>Member since</dt><dd>{{ member.created_at|date:"M j, Y" }}</dd></div>
+    </dl>
+    {% if member.notes %}<p class="notes">{{ member.notes }}</p>{% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Staff{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Staff</h1>
+  <a href="{% url 'staff_create' %}" class="btn">Add staff login</a>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Name</th><th>Username</th><th>Role</th></tr></thead>
+    <tbody>
+      {% for person in staff %}
+      <tr><td>{{ person.get_full_name|default:"—" }}</td><td>{{ person.username }}</td><td>{{ person.get_role_display }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

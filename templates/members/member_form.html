@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Edit {{ object.full_name }}{% else %}Add member{% endif %}{% endblock %}
+{% block content %}
+<div class="card form-card">
+  <h1>{% if object %}Edit {{ object.full_name }}{% else %}Add member{% endif %}</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% include "_form_fields.html" %}
+    <div class="actions">
+      <button class="btn">Save</button>
+      <a href="{% if object %}{% url 'members:detail' object.pk %}{% else %}{% url 'members:list' %}{% endif %}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
