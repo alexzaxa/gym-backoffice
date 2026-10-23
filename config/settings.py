@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "accounts",
     "members",
+    "checkins",
 ]
 
 MIDDLEWARE = [
@@ -74,7 +75,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "members:list"
+LOGIN_REDIRECT_URL = "checkins:today"
 LOGOUT_REDIRECT_URL = "login"
 
 LANGUAGE_CODE = "en-us"

@@ -16,7 +16,7 @@ class SignupTests(TestCase):
             "password1": "a-strong-pass-123",
             "password2": "a-strong-pass-123",
         })
-        self.assertRedirects(resp, reverse("members:list"))
+        self.assertRedirects(resp, reverse("checkins:today"))
         user = User.objects.get(username="sam")
         self.assertEqual(user.gym.name, "Iron Works")
         self.assertTrue(user.is_owner)

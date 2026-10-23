@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from accounts.mixins import GymStaffMixin
+from checkins.stats import member_stats
 
 from .forms import MemberForm
 from .models import Member
@@ -83,3 +84,11 @@ class MemberUpdateView(MemberFormMixin, UpdateView):
 class MemberDetailView(GymMemberQuerysetMixin, DetailView):
     template_name = "members/member_detail.html"
     context_object_name = "member"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        self.object.visits.close_stale()
+        ctx["stats"] = member_stats(self.object)
+        ctx["recent_visits"] = self.object.visits.all()[:10]
+        ctx["is_inside"] = self.object.visits.open().exists()
+        return ctx

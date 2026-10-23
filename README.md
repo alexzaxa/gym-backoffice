@@ -3,7 +3,7 @@
 Web app that gyms use to manage members and check-ins. Many gyms share one
 install; each gym only ever sees its own data.
 
-Built with Python, Django and HTMX.
+Built with Python, Django and HTMX (served from `static/js`).
 
 ## What works so far
 
@@ -14,7 +14,22 @@ Built with Python, Django and HTMX.
 - **Three looks**: each gym owner picks Athletic bold (default), Dark dashboard or
   Soft and friendly in Settings. Styles live in `static/css/app.css`.
 
-Coming next: the check-in kiosk screen, then attendance reports.
+- **Check-in kiosk** at `/checkins/kiosk/`: members scan in when they arrive and
+  again when they leave. Green, blue or red screen with the member's photo. Frozen and
+  cancelled members are refused. A visit with no scan out closes after 3 hours.
+- **Check-ins page**: who's in the gym now, today's visits, refused entries, and
+  front desk check in or out by hand.
+- **Member stats**: days this month, week streak, time this week, average visit.
+
+Coming next: the member portal, payment reminder emails, then attendance reports.
+
+## Kiosk setup
+
+Log in as a staff user on the door tablet or PC and open **Kiosk**. A USB barcode
+scanner works out of the box: it types the code and presses Enter.
+
+Run `python manage.py close_stale_visits` every 15 minutes (cron or your host's
+scheduler) so forgotten scan-outs close on time. Pages also close them when loaded.
 
 ## Run it locally
 
