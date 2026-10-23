@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Log in{% endblock %}
 {% block content %}
-<div class="mx-auto max-w-sm rounded-lg bg-white p-6 shadow">
-  <h1 class="mb-4 text-xl font-semibold">Log in</h1>
+<div class="card form-card narrow">
+  <h1>Log in</h1>
   <form method="post">
     {% csrf_token %}
     {% include "_form_fields.html" %}
-    <button class="btn w-full">Log in</button>
+    <button class="btn btn-full">Log in</button>
   </form>
-  <p class="mt-4 text-center text-sm">New gym? <a href="{% url 'signup' %}" class="text-indigo-600">Sign up</a></p>
+  <p class="center">New gym? <a href="{% url 'signup' %}">Sign up</a></p>
 </div>
 {% endblock %}

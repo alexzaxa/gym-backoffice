@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block title %}Sign up your gym{% endblock %}
 {% block content %}
-<div class="mx-auto max-w-md rounded-lg bg-white p-6 shadow">
-  <h1 class="mb-1 text-xl font-semibold">Sign up your gym</h1>
-  <p class="mb-4 text-sm text-slate-500">You'll be the owner and can add front desk logins later.</p>
+<div class="card form-card">
+  <h1>Sign up your gym</h1>
+  <p class="help">You'll be the owner and can add front desk logins later.</p>
   <form method="post">
     {% csrf_token %}
     {% include "_form_fields.html" %}
-    <button class="btn w-full">Create gym</button>
+    <button class="btn btn-full">Create gym</button>
   </form>
-  <p class="mt-4 text-center text-sm">Already set up? <a href="{% url 'login' %}" class="text-indigo-600">Log in</a></p>
+  <p class="center">Already set up? <a href="{% url 'login' %}">Log in</a></p>
 </div>
 {% endblock %}

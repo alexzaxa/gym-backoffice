@@ -1,20 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Staff{% endblock %}
 {% block content %}
-<div class="mb-4 flex items-center justify-between">
-  <h1 class="text-2xl font-semibold">Staff</h1>
+<div class="page-head">
+  <h1>Staff</h1>
   <a href="{% url 'staff_create' %}" class="btn">Add staff login</a>
 </div>
-<div class="overflow-x-auto rounded-lg bg-white shadow">
-  <table class="w-full text-left">
-    <thead class="border-b text-sm text-slate-500"><tr><th class="px-4 py-2">Name</th><th class="px-4 py-2">Username</th><th class="px-4 py-2">Role</th></tr></thead>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Name</th><th>Username</th><th>Role</th></tr></thead>
     <tbody>
       {% for person in staff %}
-      <tr class="border-b last:border-0">
-        <td class="px-4 py-2">{{ person.get_full_name|default:"—" }}</td>
-        <td class="px-4 py-2">{{ person.username }}</td>
-        <td class="px-4 py-2">{{ person.get_role_display }}</td>
-      </tr>
+      <tr><td>{{ person.get_full_name|default:"—" }}</td><td>{{ person.username }}</td><td>{{ person.get_role_display }}</td></tr>
       {% endfor %}
     </tbody>
   </table>

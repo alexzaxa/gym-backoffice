@@ -1,39 +1,36 @@
-<!doctype html>
+{% load static %}<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Gym Back Office{% endblock %}</title>
-  {# CDN builds keep setup simple for now; swap for a compiled Tailwind build before launch. #}
-  <script src="https://cdn.tailwindcss.com/3.4.15"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Barlow:wght@400;600;700&family=Manrope:wght@400;600;700&family=Nunito:wght@400;600;800&family=IBM+Plex+Mono:wght@500&display=swap">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
   <script src="https://unpkg.com/htmx.org@2.0.3"></script>
-  <style type="text/tailwindcss">
-    input[type=text], input[type=email], input[type=password], input[type=search], select, textarea {
-      @apply w-full rounded-md border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:outline-none;
-    }
-    .btn { @apply inline-block rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700; }
-    .btn-secondary { @apply inline-block rounded-md border border-slate-300 bg-white px-4 py-2 font-medium text-slate-700 hover:bg-slate-50; }
-  </style>
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-800">
+<body class="theme-{{ theme }}">
+<div class="shell">
   {% if user.is_authenticated %}
-  <nav class="border-b bg-white">
-    <div class="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
-      <span class="font-semibold">{{ user.gym.name|default:"Gym Back Office" }}</span>
-      <a href="{% url 'members:list' %}" class="text-slate-600 hover:text-slate-900">Members</a>
-      {% if user.is_owner %}<a href="{% url 'staff_list' %}" class="text-slate-600 hover:text-slate-900">Staff</a>{% endif %}
-      <form method="post" action="{% url 'logout' %}" class="ml-auto">
-        {% csrf_token %}
-        <button class="text-slate-600 hover:text-slate-900">Log out {{ user.get_short_name|default:user.username }}</button>
-      </form>
-    </div>
+  {% with path=request.path %}
+  <nav class="nav">
+    <a href="{% url 'members:list' %}" class="brand">{{ user.gym.name|default:"Gym Back Office" }}</a>
+    <a href="{% url 'members:list' %}" {% if path|slice:":9" == "/members/" %}aria-current="page"{% endif %}>Members</a>
+    {% if user.is_owner %}
+    <a href="{% url 'staff_list' %}" {% if path|slice:":7" == "/staff/" %}aria-current="page"{% endif %}>Staff</a>
+    <a href="{% url 'settings' %}" {% if path == "/settings/" %}aria-current="page"{% endif %}>Settings</a>
+    {% endif %}
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button>Log out {{ user.get_short_name|default:user.username }}</button>
+    </form>
   </nav>
+  {% endwith %}
   {% endif %}
-  <main class="mx-auto max-w-5xl px-4 py-6">
-    {% for message in messages %}
-      <div class="mb-4 rounded-md bg-green-50 px-4 py-3 text-green-800">{{ message }}</div>
-    {% endfor %}
+  <main class="content">
+    {% for message in messages %}<div class="flash">{{ message }}</div>{% endfor %}
     {% block content %}{% endblock %}
   </main>
+</div>
 </body>
 </html>

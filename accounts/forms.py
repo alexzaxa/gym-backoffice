@@ -28,3 +28,11 @@ class StaffCreateForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ("first_name", "last_name", "username", "email", "role")
+
+
+class GymSettingsForm(forms.ModelForm):
+    class Meta:
+        model = Gym
+        fields = ("name", "address", "theme")
+        labels = {"name": "Gym name", "theme": "Look"}
+        widgets = {"theme": forms.RadioSelect}

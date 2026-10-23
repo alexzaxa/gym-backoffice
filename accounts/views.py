@@ -2,9 +2,9 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView
 
-from .forms import GymSignupForm, StaffCreateForm
+from .forms import GymSettingsForm, GymSignupForm, StaffCreateForm
 from .mixins import OwnerRequiredMixin
 
 
@@ -40,4 +40,17 @@ class StaffCreateView(OwnerRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.gym = self.gym
         messages.success(self.request, "Staff login created.")
+        return super().form_valid(form)
+
+
+class GymSettingsView(OwnerRequiredMixin, UpdateView):
+    form_class = GymSettingsForm
+    template_name = "accounts/settings.html"
+    success_url = reverse_lazy("settings")
+
+    def get_object(self, queryset=None):
+        return self.gym
+
+    def form_valid(self, form):
+        messages.success(self.request, "Settings saved.")
         return super().form_valid(form)

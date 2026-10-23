@@ -5,9 +5,15 @@ from django.db import models
 class Gym(models.Model):
     """One customer of the product. Every gym's data is kept separate."""
 
+    class Theme(models.TextChoices):
+        BOLD = "bold", "Athletic bold"
+        DARK = "dark", "Dark dashboard"
+        FRIENDLY = "friendly", "Soft and friendly"
+
     name = models.CharField(max_length=200)
     address = models.CharField(max_length=300, blank=True)
     timezone = models.CharField(max_length=64, default="UTC")
+    theme = models.CharField(max_length=20, choices=Theme.choices, default=Theme.BOLD)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

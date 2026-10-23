@@ -3,7 +3,7 @@
 Web app that gyms use to manage members and check-ins. Many gyms share one
 install; each gym only ever sees its own data.
 
-Built with Python, Django, HTMX and Tailwind.
+Built with Python, Django and HTMX.
 
 ## What works so far
 
@@ -11,6 +11,8 @@ Built with Python, Django, HTMX and Tailwind.
 - **Staff logins**: owners add front desk logins. Front desk staff can't manage staff.
 - **Members**: add, edit, search (name, email, phone or check-in code), filter by
   status, photo, and a unique check-in code for a QR card or keyfob.
+- **Three looks**: each gym owner picks Athletic bold (default), Dark dashboard or
+  Soft and friendly in Settings. Styles live in `static/css/app.css`.
 
 Coming next: the check-in kiosk screen, then attendance reports.
 

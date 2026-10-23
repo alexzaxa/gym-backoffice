@@ -1,26 +1,20 @@
-<div class="overflow-x-auto rounded-lg bg-white shadow">
-  <table class="w-full text-left">
-    <thead class="border-b text-sm text-slate-500">
-      <tr><th class="px-4 py-2">Name</th><th class="px-4 py-2">Status</th><th class="px-4 py-2">Phone</th><th class="px-4 py-2">Code</th></tr>
-    </thead>
-    <tbody>
-      {% for member in members %}
-      <tr class="border-b last:border-0 hover:bg-slate-50">
-        <td class="px-4 py-2"><a href="{% url 'members:detail' member.pk %}" class="font-medium text-indigo-700">{{ member.full_name }}</a></td>
-        <td class="px-4 py-2">{% include "members/_status_badge.html" %}</td>
-        <td class="px-4 py-2">{{ member.phone|default:"—" }}</td>
-        <td class="px-4 py-2 font-mono text-sm">{{ member.checkin_code }}</td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="4" class="px-4 py-6 text-center text-slate-500">No members found.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="member-list">
+  <div class="member-head" aria-hidden="true"><span>Name</span><span>Status</span><span>Phone</span><span>Code</span></div>
+  {% for member in members %}
+  <a class="member" href="{% url 'members:detail' member.pk %}">
+    {% include "members/_avatar.html" %}
+    <span class="m-name">{{ member.full_name }}</span>
+    {% include "members/_status_badge.html" %}
+    <span class="m-meta"><span>{{ member.phone|default:"—" }}</span><span class="m-sep"> · </span><span class="code">{{ member.checkin_code }}</span></span>
+  </a>
+  {% empty %}
+  <p class="empty">No members found.</p>
+  {% endfor %}
 </div>
 {% if page_obj.has_other_pages %}
-<div class="mt-4 flex gap-2 text-sm">
+<div class="pager">
   {% if page_obj.has_previous %}<a class="btn-secondary" href="?page={{ page_obj.previous_page_number }}&q={{ q|urlencode }}&status={{ status }}">Previous</a>{% endif %}
-  <span class="px-2 py-2">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+  <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
   {% if page_obj.has_next %}<a class="btn-secondary" href="?page={{ page_obj.next_page_number }}&q={{ q|urlencode }}&status={{ status }}">Next</a>{% endif %}
 </div>
 {% endif %}

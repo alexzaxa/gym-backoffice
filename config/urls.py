@@ -12,6 +12,7 @@ urlpatterns = [
     path("signup/", account_views.GymSignupView.as_view(), name="signup"),
     path("login/", auth_views.LoginView.as_view(template_name="accounts/login.html"), name="login"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path("settings/", account_views.GymSettingsView.as_view(), name="settings"),
     path("staff/", account_views.StaffListView.as_view(), name="staff_list"),
     path("staff/new/", account_views.StaffCreateView.as_view(), name="staff_create"),
     path("members/", include("members.urls")),

@@ -52,3 +52,30 @@ class StaffPermissionTests(TestCase):
     def test_login_required(self):
         resp = self.client.get(reverse("members:list"))
         self.assertRedirects(resp, f"{reverse('login')}?next={reverse('members:list')}")
+
+
+class ThemeTests(TestCase):
+    def setUp(self):
+        self.gym = Gym.objects.create(name="Iron Works")
+        self.owner = User.objects.create_user("owner", password="pw", gym=self.gym, role=User.Role.OWNER)
+        self.desk = User.objects.create_user("desk", password="pw", gym=self.gym, role=User.Role.FRONT_DESK)
+
+    def test_new_gyms_use_athletic_bold(self):
+        self.client.force_login(self.desk)
+        self.assertContains(self.client.get(reverse("members:list")), 'class="theme-bold"')
+
+    def test_owner_changes_theme_for_whole_gym(self):
+        self.client.force_login(self.owner)
+        resp = self.client.post(reverse("settings"), {"name": "Iron Works", "address": "", "theme": "dark"})
+        self.assertRedirects(resp, reverse("settings"))
+        self.gym.refresh_from_db()
+        self.assertEqual(self.gym.theme, Gym.Theme.DARK)
+        self.client.force_login(self.desk)
+        self.assertContains(self.client.get(reverse("members:list")), 'class="theme-dark"')
+
+    def test_front_desk_cannot_open_settings(self):
+        self.client.force_login(self.desk)
+        self.assertEqual(self.client.get(reverse("settings")).status_code, 403)
+
+    def test_logged_out_pages_use_default_theme(self):
+        self.assertContains(self.client.get(reverse("login")), 'class="theme-bold"')

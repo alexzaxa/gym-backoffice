@@ -49,6 +49,15 @@ class Member(models.Model):
     def full_name(self):
         return f"{self.first_name} {self.last_name}".strip()
 
+    @property
+    def initials(self):
+        return f"{self.first_name[:1]}{self.last_name[:1]}".upper()
+
+    @property
+    def avatar_color(self):
+        """Stable 0-5 index so a member keeps the same avatar color."""
+        return (self.pk or 0) % 6
+
     def save(self, *args, **kwargs):
         if not self.checkin_code:
             self.checkin_code = self._unused_code()

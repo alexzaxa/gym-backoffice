@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
@@ -46,6 +46,12 @@ class MemberListView(GymMemberQuerysetMixin, ListView):
         ctx["q"] = self.request.GET.get("q", "")
         ctx["status"] = self.request.GET.get("status", "")
         ctx["statuses"] = Member.Status.choices
+        counts = dict(
+            Member.objects.filter(gym=self.gym)
+            .values_list("status")
+            .annotate(n=Count("id"))
+        )
+        ctx["status_counts"] = [(label, counts.get(value, 0)) for value, label in Member.Status.choices]
         return ctx
 
 
